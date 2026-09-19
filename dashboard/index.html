@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trend Emperor BTC Sentinel</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Trend Emperor BTC Sentinel</p>
+      <h1>Public read-only research dashboard</h1>
+      <p class="intro">A compact view of locally imported public BTC market data.</p>
+      <dl id="status" aria-live="polite">
+        <div><dt>Mode</dt><dd data-field="mode">Loading…</dd></div>
+        <div><dt>Status</dt><dd data-field="status">Loading…</dd></div>
+        <div><dt>Symbol</dt><dd data-field="symbol">—</dd></div>
+        <div><dt>Latest public timestamp</dt><dd data-field="timestamp_utc">—</dd></div>
+        <div><dt>Close</dt><dd data-field="close">—</dd></div>
+        <div><dt>Row count</dt><dd data-field="row_count">—</dd></div>
+      </dl>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
