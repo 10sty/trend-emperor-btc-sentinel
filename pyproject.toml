@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trend-emperor-btc-sentinel"
+version = "0.1.0"
+description = "Public-data BTC market research and reproducible robustness testing"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+dependencies = [
+  "duckdb>=1.1.0",
+  "pandas>=2.2.0",
+  "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = [
+  "config",
+  "db_runtime",
+  "download_binance_spot",
+  "import_to_duckdb",
+  "resample_timeframes",
+  "validate_data",
+  "indicators",
+  "swing_points",
+  "overfit_risk",
+  "trend_clock_strategy_engine",
+  "intraday_livermore_trend_strategy",
+  "intraday_livermore_profile_optimizer",
+  "intraday_livermore_walk_forward",
+  "intraday_livermore_profile_robustness",
+  "public_dashboard",
+]
