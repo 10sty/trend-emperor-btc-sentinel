@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -61,9 +62,35 @@ BANNED = (
 )
 
 
+def candidate_paths(root: Path) -> list[Path]:
+    repository = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+    )
+    if repository.returncode == 0 and Path(repository.stdout.strip()).resolve() == root:
+        listed = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(root),
+                "ls-files",
+                "-z",
+                "--cached",
+                "--others",
+                "--exclude-standard",
+            ],
+            capture_output=True,
+            check=True,
+        )
+        return sorted(root / name.decode("utf-8") for name in listed.stdout.split(b"\0") if name)
+    return sorted(root.rglob("*"))
+
+
 def scan_tree(root: Path) -> list[str]:
     errors: list[str] = []
-    for path in sorted(root.rglob("*")):
+    root = root.resolve()
+    for path in candidate_paths(root):
         relative = path.relative_to(root)
         if ".git" in relative.parts:
             continue

@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -35,3 +36,17 @@ def test_private_content_fails(tmp_path: Path) -> None:
     )
     (tmp_path / "bad.txt").write_text(content, encoding="utf-8")
     assert len(scan_tree(tmp_path)) >= 6
+
+
+def test_git_ignored_build_artifacts_are_not_scanned(tmp_path: Path) -> None:
+    (tmp_path / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
+    (tmp_path / "safe.py").write_text("MODE = 'read_only'\n", encoding="utf-8")
+    cache_dir = tmp_path / "__pycache__"
+    cache_dir.mkdir()
+    (cache_dir / "safe.cpython-312.pyc").write_bytes(b"generated")
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "add", ".gitignore", "safe.py"], check=True
+    )
+
+    assert scan_tree(tmp_path) == []
